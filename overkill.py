@@ -58,10 +58,19 @@ Be concise but thorough. Focus on actionable insights."""
 class VibeEngineer:
     """Conducts vibe engineering conversation to crystallize decisions."""
 
-    def __init__(self, repo_analysis: dict, feature_request: str):
+    def __init__(self, repo_analysis: dict, feature_request: str, demo_mode: bool = False):
         self.repo_analysis = repo_analysis
         self.feature_request = feature_request
         self.decisions = []
+        self.demo_mode = demo_mode
+        self.demo_responses = [
+            "I want to create a marketing landing page for Quivr, separate from the docs. Something modern that showcases what it does.",
+            "The main message should be: turn any codebase into an intelligent Q&A system. Fast setup, no infrastructure needed.",
+            "I want it clean and minimal - think Vercel or Linear style. Fast, with maybe one subtle animation on the hero.",
+            "Main CTA should be 'Get Started' linking to docs, secondary CTA 'View on GitHub'. Target audience is Python devs doing RAG.",
+            "done"
+        ]
+        self.demo_response_index = 0
 
     async def engineer(self) -> dict:
         """Run the vibe engineering conversation."""
@@ -113,12 +122,12 @@ Start the vibe engineering conversation. Ask your first question to understand w
 
                     # Check if we're done (engineer says we have enough)
                     if "SPEC_READY" in assistant_response or "ready to generate" in assistant_response.lower():
-                        confirm = input("\nReady to generate SPEC.md? (yes/no): ").strip().lower()
-                        if confirm in ['yes', 'y']:
+                        confirm = self._get_user_input("\nReady to generate SPEC.md? (yes/no): ")
+                        if confirm.lower() in ['yes', 'y', 'done']:
                             break
 
                     # Get user input
-                    user_input = input("You: ").strip()
+                    user_input = self._get_user_input("You: ")
 
                     if not user_input:
                         continue
@@ -138,6 +147,25 @@ Start the vibe engineering conversation. Ask your first question to understand w
             "repo_analysis": self.repo_analysis,
             "feature_request": self.feature_request
         }
+
+    def _get_user_input(self, prompt: str) -> str:
+        """Get user input, or use demo responses if in demo mode."""
+        if self.demo_mode:
+            if self.demo_response_index < len(self.demo_responses):
+                response = self.demo_responses[self.demo_response_index]
+                self.demo_response_index += 1
+                print(f"{prompt}{response}")
+                import time
+                time.sleep(1)  # Simulate human typing delay
+                return response
+            else:
+                return "done"
+        else:
+            try:
+                return input(prompt).strip()
+            except EOFError:
+                print("\n[No interactive terminal detected. Use --demo flag for non-interactive mode]")
+                sys.exit(1)
 
     def _build_system_prompt(self) -> str:
         """Build the system prompt for the vibe engineer."""
@@ -281,6 +309,11 @@ async def main():
         default="SPEC.md",
         help="Output file for the spec (default: SPEC.md)"
     )
+    parser.add_argument(
+        "--demo",
+        action="store_true",
+        help="Run in demo mode with simulated responses (for non-interactive environments)"
+    )
 
     args = parser.parse_args()
 
@@ -311,7 +344,7 @@ async def main():
         print("="*60 + "\n")
 
         # Step 2: Vibe engineering conversation
-        engineer = VibeEngineer(analysis, args.feature)
+        engineer = VibeEngineer(analysis, args.feature, demo_mode=args.demo)
         session = await engineer.engineer()
 
         # Step 3: Crystallize into SPEC.md
