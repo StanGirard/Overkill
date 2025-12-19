@@ -15,8 +15,8 @@ Vibe coding fails because decisions are made by the LLM in a black box. Overkill
 ## Installation
 
 ```bash
-# Install Claude Agent SDK
-pip install -r requirements.txt
+# Install with uv
+uv sync
 
 # Make sure Claude Code CLI is available
 npm install -g @anthropic-ai/claude-code
@@ -26,13 +26,13 @@ npm install -g @anthropic-ai/claude-code
 
 ```bash
 # Local repo
-python overkill.py --repo /path/to/repo "I want to improve the hero"
+uv run overkill.py --repo /path/to/repo "I want to improve the hero"
 
 # GitHub repo
-python overkill.py --repo https://github.com/user/repo "Add dark mode toggle"
+uv run overkill.py --repo https://github.com/user/repo "Add dark mode toggle"
 
 # Custom output location
-python overkill.py --repo ./my-project "Feature description" --output ./specs/FEATURE.md
+uv run overkill.py --repo ./my-project "Feature description" --output ./specs/FEATURE.md
 ```
 
 ## How It Works
@@ -84,7 +84,7 @@ The output is so clear that ANY developer (or Claude Code) can execute it withou
 ## Example Session
 
 ```bash
-$ python overkill.py --repo https://github.com/QuivrHQ/quivr "Improve the hero"
+$ uv run overkill.py --repo https://github.com/QuivrHQ/quivr "Improve the hero"
 
 🔍 Exploring repository...
 
