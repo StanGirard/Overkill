@@ -1,9 +1,9 @@
-# SPEC: Améliore l'ui avec shadcn
+# SPEC: Améliore l'ux de la phase de question réponse. L'IA est très verbeuse et c'est chiant a lire ou intéragir 
 
 
 ## Feature Summary
 
-**What:** Améliore l'ui avec shadcn
+**What:** Améliore l'ux de la phase de question réponse. L'IA est très verbeuse et c'est chiant a lire ou intéragir 
 
 
 **Why:** Feature requested through Overkill vibe engineering session.
@@ -16,45 +16,31 @@
 
 ## Repository Context
 
-## Repository Analysis: Overkill
-
-### Stack
-- Primary language: TypeScript/JavaScript
-- Framework: React (assumed)
-- Build tools: Vite/Webpack (assumed)
-
-### Structure
-- Standard project layout
-- `src/` directory for source code
-- `package.json` for dependencies
-
-### Patterns
-- Component-based architecture
-- Module-based organization
-
-### Conventions
-- Modern JavaScript/TypeScript patterns
-- Functional components preferred
-
-### Integration Points
-- New features would typically be added in `src/`
-- Components in `src/components/`
-- Business logic in `src/services/` or `src/lib/`
-
-*Note: This is a placeholder analysis. Full analysis requires Claude Agent SDK integration.*
+I'll analyze this repository systematically to understand its stack, structure, patterns, and conventions.
 
 ---
 
 ## Technical Decisions
 
 ### Decision 1
-> "Poser les bases pour le futures"
+> "Quick back and forth would be amazing. Use components to show trade-offs cleanly. I don't know what do you think ? Look at what claude code does too. They ask questions with pre render input and somet..."
 
 ### Decision 2
-> "j'aimerais pouvoir packager cela en application native"
+> "1. just common ones. 
+2. compact/collapsible. 
+Conversational. 
+
+The goal of Overkill is to make a project where you talk to an expert"
 
 ### Decision 3
-> "ca marche on polit après et UI simple"
+> "Structure output.
+
+I don't know for common. 
+
+Yes that sounds right"
+
+### Decision 4
+> "I don't know. I trust you"
 
 ---
 
@@ -131,100 +117,300 @@ Based on the repository structure and decisions made:
 <summary>Click to expand full conversation</summary>
 
 **ASSISTANT**:
-Salut! J'ai analysé **Overkill** et je vois que tu veux:
+Ah, I see the core issue – the Q&A phase is too verbose and exhausting to interact with. Let me understand the current experience first.
 
-> "Améliore l'ui avec shadcn
-"
+## Current Pain Point
 
-Avant de plonger dans les détails, laisse-moi comprendre ta vision.
+You're saying the AI is too wordy during the question/answer phase. I'm guessing users feel like:
+- They're reading walls of text when they just want to answer and move on
+- The back-and-forth feels slow and draining
+- They lose focus or patience before the spec is done
 
-**Quel est l'objectif principal de cette feature?**
+## The Spectrum of Conversational Density
 
-Quick win ◆━━━━━━━━━━━━━━━◆ Foundation
-→ Résoudre un problème immédiat    → Poser les bases pour le futur
-→ Livraison rapide                 → Plus de flexibilité
-→ Scope limité                     → Investissement initial
+Let me show you the trade-off space:
 
-Où te situes-tu sur ce spectrum? Dis-moi aussi le contexte: c'est pour toi, un client, un projet open source?
+```
+Minimal ◆━━━━━━━━━━━━━━━◆ Verbose
+→ Fast, scannable          → Complete, educational
+→ Assumes competence       → Explains reasoning
+→ Risk: ambiguity          → Risk: fatigue
+```
 
----
+Right now it sounds like you're way over on the right, and users are hitting that fatigue risk hard.
 
-**USER**:
-Poser les bases pour le futures
+## My First Question
 
----
+**What does the *ideal* interaction rhythm look like in your head?**
 
-**ASSISTANT**:
-Je vois mieux maintenant. Parlons architecture.
+For example:
+- Quick back-and-forth like a Slack conversation?
+- One focused question at a time with minimal setup?
+- A form-like experience where the AI just asks 5-7 questions upfront?
+- Something else entirely?
 
-**Comment vois-tu l'organisation du code?**
+And specifically: **What part of the verbosity is the most annoying?** Is it:
+- The explanations of trade-offs (too much context)?
+- The examples and reasoning (unnecessary fluff)?
+- The length of the questions themselves?
+- Something about the pacing/structure?
 
-Monolithique ◆━━━━━━━━━━━━━━━◆ Modulaire
-→ Tout dans un fichier/module      → Séparation claire
-→ Simple à comprendre              → Facile à tester
-→ Refactor plus tard               → Structure dès le départ
-
-**Et pour les dépendances externes?**
-
-Minimal ◆━━━━━━━━━━━━━━━◆ Libraries
-→ Moins de deps = moins de risques → Plus rapide à implémenter
-→ Code maison                      → Battle-tested
-
-Partage-moi tes préférences. Je note tout pour le SPEC.
-
----
-
-**USER**:
-j'aimerais pouvoir packager cela en application native
-
----
-
-**ASSISTANT**:
-Excellent! On avance bien.
-
-**Pour l'interface (si applicable):**
-
-Fonctionnel d'abord ◆━━━━━━━━━━━━━━━◆ Design d'abord
-→ Ça marche, on polish après       → UX soignée dès le start
-→ Itération rapide                 → Moins de refactor UI
-
-**Niveau de complexité UI:**
-
-Basique ◆━━━━━━━━━━━━━━━◆ Élaboré
-→ Formulaires simples              → Animations, transitions
-→ Native browser components        → Custom design system
-
-Si t'as assez discuté et que tu veux que je génère le SPEC, tape **done**.
-Sinon, dis-moi tes préférences et on continue.
+Give me the vibe you're going for.
 
 ---
 
 **USER**:
-ca marche on polit après et UI simple
+Quick back and forth would be amazing. Use components to show trade-offs cleanly. I don't know what do you think ? Look at what claude code does too. They ask questions with pre render input and sometime a free range input
 
 ---
 
 **ASSISTANT**:
-SPEC_READY!
+Oh YES, this is the right direction. Claude Code's approach is brilliant – they use those pre-rendered buttons/options that you can just *click* instead of typing out answers.
 
-**Récapitulatif des décisions:**
+## Let me paint the picture I'm seeing:
 
-1. **Feature**: Améliore l'ui avec shadcn
+**Current flow (verbose):**
+```
+AI: "I see you're using Next.js... [3 paragraphs explaining context]
+    Here's a spectrum showing trade-offs... [diagram]
+    What do you think about..."
+    
+User: *sighs* types out a response
+```
 
-2. **Approche**: Basée sur notre discussion
-3. **Points clés décidés**:
-   - Échange 1: "Poser les bases pour le futures..."
-   - Échange 2: "j'aimerais pouvoir packager cela en application na..."
-   - Échange 3: "ca marche on polit après et UI simple..."
+**New flow (snappy):**
+```
+AI: "Hero section interactivity level?"
 
-Je vais maintenant générer le **SPEC.md** avec:
-- Le contexte complet
-- Toutes les décisions techniques
-- Les fichiers à créer/modifier
-- Les étapes d'implémentation
-- Les contraintes à respecter
+[Static HTML] [Light CSS] [Some React] [Full interactive]
 
-Le fichier sera prêt pour être exécuté par Claude Code ou n'importe quel dev.
+Or describe what you want: [____________]
+```
+
+## The Implementation Spectrum
+
+```
+Text-only ◆━━━━━━━━━━━━━━━◆ Rich components
+→ Simple to build          → Better UX
+→ Works everywhere         → Needs UI work
+→ Slower interaction       → Instant clicks
+```
+
+## Here's what I'm thinking:
+
+**For the Q&A phase specifically:**
+
+1. **Questions become:** Short, direct, no preamble
+2. **Options become:** Visual components (buttons, sliders, radio groups)
+3. **Context becomes:** Collapsible or tooltip ("Why does this matter?")
+4. **Free text:** Always available as an escape hatch
+
+**Quick questions:**
+
+1. **Should every question have pre-rendered options, or just common ones?** (like framework choices vs. "describe your feature")
+
+2. **How do you want to handle the spectrum/trade-off visuals?** 
+   - Keep them but make them compact/collapsible?
+   - Replace with simple button labels?
+   - Remove entirely?
+
+3. **What about the AI's "personality"?** Should it:
+   - Stay conversational but shorter ("Cool. Next:")
+   - Go full minimal ("Question 3/7:")
+   - Something in between?
+
+What feels right?
+
+---
+
+**USER**:
+1. just common ones. 
+2. compact/collapsible. 
+Conversational. 
+
+The goal of Overkill is to make a project where you talk to an expert
+
+---
+
+**ASSISTANT**:
+Perfect. So we're keeping that "talk to an expert" vibe, just making it *snappier* and more interactive. I like it.
+
+## Let me clarify the vision:
+
+You want that feeling of sitting next to a senior engineer who:
+- Asks sharp, direct questions
+- Shows you quick visual options when helpful
+- Doesn't waste your time with essays
+- But can expand on "why" if you need it
+
+## Implementation decisions I need:
+
+**1. Component Library Approach**
+
+Where do these interactive components live?
+
+```
+Inline in prompts ◆━━━━━━━━━━━━━━━◆ Separate UI layer
+→ Simpler (just better prompts)    → Richer (actual buttons/UI)
+→ Works in any LLM interface       → Needs frontend work
+→ Still some typing needed         → True click-to-answer
+```
+
+Are you thinking:
+- **Option A:** The AI outputs structured data that your frontend renders as actual UI components (buttons, radios, etc.)?
+- **Option B:** Keep it in the LLM conversation but use better formatting/structure?
+- **Option C:** Something hybrid?
+
+**2. Common Question Bank**
+
+You mentioned "common ones" get pre-rendered options. What are the common decision points you see coming up repeatedly? Like:
+
+- Framework/stack choices?
+- State management approach?
+- Styling/UI library?
+- Auth strategy?
+- Data fetching patterns?
+
+Give me 3-5 examples of questions that almost *always* get asked.
+
+**3. Collapsible Context**
+
+When the AI wants to explain a trade-off, how do you envision the interaction?
+
+```
+AI: "State management approach?"
+
+[Redux] [Zustand] [Context] [Jotai] [Describe...]
+
+💡 Why this matters (click to expand)
+```
+
+Does that feel right? Or different?
+
+---
+
+**USER**:
+Structure output.
+
+I don't know for common. 
+
+Yes that sounds right
+
+---
+
+**ASSISTANT**:
+Cool, we're aligned. So:
+
+✅ Structured output → frontend renders as real UI
+✅ Collapsible context with emoji/icon to expand
+✅ Keep conversational tone, just shorter
+
+## Now the practical stuff:
+
+**1. What triggers "pre-rendered options" vs "free text input"?**
+
+The AI needs to decide in real-time: "Is this a common choice-based question or an open-ended one?"
+
+```
+Hardcoded rules ◆━━━━━━━━━━━━━━━◆ AI decides dynamically
+→ Predictable, fast              → Flexible, smart
+→ Need to maintain list          → Might guess wrong
+→ Less tokens used               → Uses more reasoning
+```
+
+My gut says: **Let the AI decide dynamically** based on the question. If it's asking about a well-known choice (framework, library, pattern), it outputs options. If it's exploratory ("what's the main user journey?"), it outputs free text prompt.
+
+Sound reasonable?
+
+**2. Output schema - what does it look like?**
+
+Something like:
+
+```typescript
+{
+  question: "State management approach?",
+  type: "single-choice" | "multi-choice" | "spectrum" | "free-text",
+  options?: ["Redux", "Zustand", "Context API", "Jotai"],
+  context?: "Managing shared state across components affects bundle size and complexity...",
+  contextExpanded: false
+}
+```
+
+Does that structure capture what you need? Any fields missing?
+
+**3. Where does this fit in your current architecture?**
+
+Looking at your stack - is this:
+- A new endpoint that streams structured Q&A objects?
+- Modifying the existing agent conversation flow?
+- A separate "interview mode" vs the current chat?
+
+What's the integration point?
+
+---
+
+**USER**:
+I don't know. I trust you
+
+---
+
+**ASSISTANT**:
+Alright, I appreciate the trust. Let me make some calls here based on what makes sense for your codebase.
+
+## Decisions I'm making:
+
+**1. AI decides dynamically** - More flexible, and Claude is good at this. The agent will decide per-question whether to offer options or free text.
+
+**2. Output schema:**
+```typescript
+{
+  question: string,
+  type: "single-choice" | "multi-choice" | "slider" | "free-text",
+  options?: string[],
+  context?: string,  // The "why this matters" expandable
+  placeholder?: string  // For free-text inputs
+}
+```
+
+**3. Integration:** Modify the existing agent's Q&A phase to output this structured format instead of pure text.
+
+## What I need from you now:
+
+**The actual behavior change** - Let's get concrete about the before/after:
+
+**Current flow (I'm guessing):**
+```
+User: "Add a hero section"
+AI: [Long explanation about hero sections...]
+User: [Types response]
+AI: [Long follow-up...]
+```
+
+**New flow should be:**
+```
+User: "Add a hero section"
+AI: {
+  question: "What's the main call-to-action?",
+  type: "free-text",
+  placeholder: "e.g., 'Start free trial', 'Book a demo'..."
+}
+User: [Clicks, types, or selects]
+AI: {
+  question: "Visual style?",
+  type: "single-choice",
+  options: ["Minimal", "Bold/Modern", "Illustration-heavy", "Video background"],
+  context: "Affects bundle size and initial load time"
+}
+```
+
+**My question:** At what point does this structured Q&A phase end and regular conversation resume?
+
+- After N questions?
+- When the AI says "SPEC_READY"?
+- When user says "done"?
+- Something else?
+
+And what happens to that collected info - does it feed into a spec doc, or...?
 
 </details>
 

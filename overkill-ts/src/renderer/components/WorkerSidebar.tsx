@@ -1,12 +1,20 @@
-import React from 'react'
-import type { WorkerInfo, Phase } from '../../shared/types'
+import React, { useRef, useEffect } from 'react'
+import type { WorkerInfo, Phase, LogEntry } from '../../shared/types'
 
 interface WorkerSidebarProps {
   workers: Map<string, WorkerInfo>
   phase: Phase
+  logs: LogEntry[]
 }
 
-const WorkerSidebar: React.FC<WorkerSidebarProps> = ({ workers, phase }) => {
+const WorkerSidebar: React.FC<WorkerSidebarProps> = ({ workers, phase, logs }) => {
+  const logsEndRef = useRef<HTMLDivElement>(null)
+
+  // Auto-scroll to bottom when new logs arrive
+  useEffect(() => {
+    logsEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [logs])
+
   const workerTypeLabels: Record<WorkerInfo['type'], { icon: string; label: string }> = {
     'code-explorer': { icon: '🔍', label: 'Code Explorer' },
     'researcher': { icon: '🌐', label: 'Researcher' },
@@ -89,6 +97,22 @@ const WorkerSidebar: React.FC<WorkerSidebarProps> = ({ workers, phase }) => {
         </div>
       </div>
 
+      {/* Activity Logs */}
+      {logs.length > 0 && (
+        <div style={styles.logsSection}>
+          <h3 style={styles.sectionTitle}>Activity</h3>
+          <div style={styles.logsContainer}>
+            {logs.map((log) => (
+              <div key={log.id} style={styles.logItem}>
+                <span style={styles.logIcon}>{log.icon}</span>
+                <span style={styles.logMessage}>{log.message}</span>
+              </div>
+            ))}
+            <div ref={logsEndRef} />
+          </div>
+        </div>
+      )}
+
       {/* Workers */}
       {workers.size > 0 && (
         <div style={styles.section}>
@@ -118,22 +142,31 @@ const WorkerSidebar: React.FC<WorkerSidebarProps> = ({ workers, phase }) => {
 
 const styles: Record<string, React.CSSProperties> = {
   sidebar: {
-    width: 240,
+    width: 280,
     background: '#141414',
     borderRight: '1px solid #2a2a2a',
     padding: 16,
     display: 'flex',
     flexDirection: 'column',
-    gap: 24,
-    overflow: 'auto',
+    gap: 16,
+    overflow: 'hidden',
   },
   section: {
     display: 'flex',
     flexDirection: 'column',
     gap: 12,
+    flexShrink: 0,
+  },
+  logsSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    flex: 1,
+    minHeight: 0,
+    overflow: 'hidden',
   },
   sectionTitle: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 600,
     color: '#666',
     textTransform: 'uppercase',
@@ -172,6 +205,32 @@ const styles: Record<string, React.CSSProperties> = {
     width: 2,
     height: 16,
     borderRadius: 1,
+  },
+  logsContainer: {
+    flex: 1,
+    overflow: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 4,
+    paddingRight: 4,
+  },
+  logItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 8,
+    padding: '4px 0',
+  },
+  logIcon: {
+    fontSize: 12,
+    flexShrink: 0,
+    width: 16,
+    textAlign: 'center',
+  },
+  logMessage: {
+    fontSize: 12,
+    color: '#9ca3af',
+    lineHeight: 1.4,
+    wordBreak: 'break-word',
   },
   workers: {
     display: 'flex',

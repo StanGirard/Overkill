@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { IPC_CHANNELS } from '../shared/ipc-channels'
-import type { AgentMessage, WorkerInfo, Phase, PipelineResult } from '../shared/types'
+import type { AgentMessage, WorkerInfo, Phase, PipelineResult, LogEntry } from '../shared/types'
 
 // Type-safe API exposed to renderer
 const electronAPI = {
@@ -34,6 +34,12 @@ const electronAPI = {
     const handler = (_event: Electron.IpcRendererEvent, phase: Phase) => callback(phase)
     ipcRenderer.on(IPC_CHANNELS.PHASE_CHANGE, handler)
     return () => ipcRenderer.removeListener(IPC_CHANNELS.PHASE_CHANGE, handler)
+  },
+
+  onLog: (callback: (log: LogEntry) => void): (() => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, log: LogEntry) => callback(log)
+    ipcRenderer.on(IPC_CHANNELS.AGENT_LOG, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.AGENT_LOG, handler)
   },
 
   onError: (callback: (error: string) => void): (() => void) => {

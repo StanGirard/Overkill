@@ -7,7 +7,7 @@ import { BrowserWindow } from 'electron'
 import { join } from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import { IPC_CHANNELS } from '../shared/ipc-channels'
-import type { AgentMessage, WorkerInfo, Phase, PipelineResult } from '../shared/types'
+import type { AgentMessage, WorkerInfo, Phase, PipelineResult, LogEntry } from '../shared/types'
 import { runCodeExplorer } from '../agents/code-explorer'
 import { runVibeEngineer } from '../agents/vibe-engineer'
 import { runCrystallizer } from '../agents/crystallizer'
@@ -166,9 +166,16 @@ export class AgentController {
   }
 
   /**
-   * Log activity (for debugging)
+   * Log activity and send to renderer
    */
   private log(message: string, icon: string): void {
     console.log(`${icon} ${message}`)
+    const logEntry: LogEntry = {
+      id: uuidv4(),
+      message,
+      icon,
+      timestamp: Date.now(),
+    }
+    this.mainWindow.webContents.send(IPC_CHANNELS.AGENT_LOG, logEntry)
   }
 }

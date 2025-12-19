@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import type { AgentMessage, WorkerInfo, Phase } from '../shared/types'
+import React, { useState, useEffect } from 'react'
+import type { AgentMessage, WorkerInfo, Phase, LogEntry } from '../shared/types'
 import ChatInterface from './components/ChatInterface'
 import WorkerSidebar from './components/WorkerSidebar'
 import InputBox from './components/InputBox'
@@ -8,6 +8,7 @@ const App: React.FC = () => {
   const [phase, setPhase] = useState<Phase>('idle')
   const [messages, setMessages] = useState<AgentMessage[]>([])
   const [workers, setWorkers] = useState<Map<string, WorkerInfo>>(new Map())
+  const [logs, setLogs] = useState<LogEntry[]>([])
   const [repoPath, setRepoPath] = useState<string>('')
   const [featureRequest, setFeatureRequest] = useState<string>('')
   const [isRunning, setIsRunning] = useState(false)
@@ -28,6 +29,10 @@ const App: React.FC = () => {
       setPhase(newPhase)
     })
 
+    const unsubLog = window.electronAPI.onLog((log) => {
+      setLogs((prev) => [...prev, log])
+    })
+
     const unsubError = window.electronAPI.onError((err) => {
       setError(err)
       setIsRunning(false)
@@ -42,6 +47,7 @@ const App: React.FC = () => {
       unsubMessage()
       unsubWorker()
       unsubPhase()
+      unsubLog()
       unsubError()
       unsubComplete()
     }
@@ -62,6 +68,7 @@ const App: React.FC = () => {
     setSpecPath(null)
     setMessages([])
     setWorkers(new Map())
+    setLogs([])
 
     await window.electronAPI.startPipeline(repoPath, featureRequest)
   }
@@ -101,7 +108,7 @@ const App: React.FC = () => {
       {/* Main content */}
       <div style={styles.main}>
         {/* Sidebar */}
-        <WorkerSidebar workers={workers} phase={phase} />
+        <WorkerSidebar workers={workers} phase={phase} logs={logs} />
 
         {/* Chat area */}
         <div style={styles.chatArea}>

@@ -40,10 +40,18 @@ export interface PipelineResult {
   error?: string
 }
 
+export interface LogEntry {
+  id: string
+  message: string
+  icon: string
+  timestamp: number
+}
+
 export interface UICallbacks {
   onMessage: (msg: AgentMessage) => void
   onPhaseChange: (phase: Phase) => void
   onWorkerStatus: (worker: WorkerInfo) => void
+  onLog: (log: LogEntry) => void
   onComplete: (specPath: string) => void
   onError: (error: Error) => void
 }

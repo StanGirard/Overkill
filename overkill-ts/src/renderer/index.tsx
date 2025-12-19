@@ -13,6 +13,7 @@ declare global {
       onAgentMessage: (callback: (msg: import('../shared/types').AgentMessage) => void) => () => void
       onWorkerStatus: (callback: (worker: import('../shared/types').WorkerInfo) => void) => () => void
       onPhaseChange: (callback: (phase: import('../shared/types').Phase) => void) => () => void
+      onLog: (callback: (log: import('../shared/types').LogEntry) => void) => () => void
       onError: (callback: (error: string) => void) => () => void
       onPipelineComplete: (callback: (specPath: string) => void) => () => void
     }

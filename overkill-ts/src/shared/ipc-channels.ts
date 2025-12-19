@@ -10,6 +10,7 @@ export const IPC_CHANNELS = {
   AGENT_STATUS: 'agent:status',
   WORKER_STATUS: 'worker:status',
   PHASE_CHANGE: 'phase:change',
+  AGENT_LOG: 'agent:log',
   AGENT_ERROR: 'agent:error',
   PIPELINE_COMPLETE: 'pipeline:complete',
 } as const
