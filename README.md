@@ -1,4 +1,4 @@
-# Overkill V0
+# Overkill
 
 Transform fuzzy ideas into executable specs through vibe engineering.
 
@@ -11,6 +11,33 @@ Vibe coding fails because decisions are made by the LLM in a black box. Overkill
 1. **Explores** your repo - analyzes stack, structure, patterns, conventions
 2. **Engineers** through conversation - poses spectrums, presents trade-offs, records decisions
 3. **Crystallizes** into SPEC.md - zero ambiguity, ready to execute
+
+## TUI Interface
+
+Overkill features a beautiful Terminal User Interface (TUI) with:
+- Split-panel layout showing agent activity (left) and conversation (right)
+- Real-time streaming of agent responses
+- Visible tool calls and status updates as agents work
+- Scrollable conversation history
+
+```
+╔═══════════════════════════════════════════════════════════╗
+║  🔍 EXPLORE → 🤖 ENGINEER → 📝 CRYSTALLIZE                ║
+╠═════════════════════════╦═════════════════════════════════╣
+║  Agent Activity         ║  💬 Conversation                ║
+║  ─────────────────      ║  ─────────────────              ║
+║  RepoExplorer           ║  Agent: [message]               ║
+║  Status: Analyzing...   ║                                 ║
+║                         ║  You: [message]                 ║
+║  🔧 Read(main.py)       ║                                 ║
+║  📊 Found: 3 classes    ║  [scrollable history]           ║
+║  🔧 Grep(async def)     ║                                 ║
+║  ✓ 8 matches            ║  🔔 New message!                ║
+║                         ║                                 ║
+║  [scrollable logs]      ║  ─────────────────              ║
+║                         ║  You: ▌ [input field]           ║
+╚═════════════════════════╩═════════════════════════════════╝
+```
 
 ## Installation
 
@@ -26,13 +53,16 @@ npm install -g @anthropic-ai/claude-code
 
 ```bash
 # Local repo
-uv run overkill.py --repo /path/to/repo "I want to improve the hero"
+uv run overkill --repo /path/to/repo "I want to improve the hero"
 
 # GitHub repo
-uv run overkill.py --repo https://github.com/user/repo "Add dark mode toggle"
+uv run overkill --repo https://github.com/user/repo "Add dark mode toggle"
 
 # Custom output location
-uv run overkill.py --repo ./my-project "Feature description" --output ./specs/FEATURE.md
+uv run overkill --repo ./my-project "Feature description" --output ./specs/FEATURE.md
+
+# Demo mode (for non-interactive environments)
+uv run overkill --repo ./my-project "Feature description" --demo
 ```
 
 ## How It Works
@@ -81,47 +111,32 @@ Generates SPEC.md with:
 
 The output is so clear that ANY developer (or Claude Code) can execute it without asking questions.
 
-## Example Session
+## Keyboard Shortcuts
 
-```bash
-$ uv run overkill.py --repo https://github.com/QuivrHQ/quivr "Improve the hero"
-
-🔍 Exploring repository...
-
-============================================================
-REPOSITORY ANALYSIS
-============================================================
-[Analysis output...]
-============================================================
-
-============================================================
-VIBE ENGINEERING SESSION
-============================================================
-Feature request: Improve the hero
-Repo: /tmp/overkill_xyz
-
-Engineer: I see you're using Next.js with Tailwind CSS...
-[Conversation continues...]
-
-You: I want something more engaging but still fast
-
-Engineer: Got it. Here's a spectrum for engagement...
-
-[More conversation...]
-
-Ready to generate SPEC.md? (yes/no): yes
-
-📝 Crystallizing decisions into SPEC.md...
-
-✅ SPEC.md generated at: /home/user/SPEC.md
-```
+- `Ctrl+C` or `Ctrl+Q`: Quit the application
+- `Enter`: Submit your message in the conversation
 
 ## Architecture
 
-Single-file implementation using Claude Agent SDK:
+Modular implementation using Claude Agent SDK and Textual:
 
+```
+overkill/
+├── __init__.py
+├── core/
+│   ├── explorer.py       # RepoExplorer agent
+│   ├── engineer.py       # VibeEngineer agent
+│   └── crystallizer.py   # Crystallizer agent
+├── ui/
+│   ├── adapter.py        # UIAdapter abstract interface
+│   └── textual_ui.py     # Textual TUI implementation
+└── main.py               # Entry point
+```
+
+- **UIAdapter**: Abstract interface for UI implementations (enables future web/Electron)
+- **TextualUI**: Terminal-based UI with split panels
 - **RepoExplorer**: Uses Claude with Read/Grep/Glob tools to analyze codebase
-- **VibeEngineer**: Uses ClaudeSDKClient for continuous conversation (maintains context)
+- **VibeEngineer**: Uses ClaudeSDKClient for continuous conversation
 - **Crystallizer**: Uses Claude to generate structured SPEC.md from decisions
 
 ## Requirements
@@ -129,22 +144,15 @@ Single-file implementation using Claude Agent SDK:
 - Python 3.11+
 - Claude Agent SDK
 - Claude Code CLI
+- Textual (installed automatically)
 - Git (for cloning repos)
 
 ## Design Principles
 
-1. **No over-engineering** - Single file, minimal dependencies
+1. **Transparency** - See what agents are doing in real-time
 2. **Conversation quality** - Focus on thoughtful questions
 3. **Zero ambiguity** - SPEC.md must be executable without clarification
-4. **Fast feedback** - Quick exploration, focused conversation
-
-## Next Steps
-
-This is V0. Future improvements could include:
-- Better conversation templates
-- Multi-turn spec refinement
-- Integration with Claude Code workflows
-- SPEC.md validation
+4. **Future-ready** - Architecture supports web/Electron migration
 
 ## License
 

@@ -5,10 +5,11 @@ description = "Transform fuzzy ideas into executable specs through vibe engineer
 requires-python = ">=3.11"
 dependencies = [
     "claude-agent-sdk>=0.1.0",
+    "textual>=6.11.0",
 ]
 
 [project.scripts]
-overkill = "overkill:main"
+overkill = "overkill.main:entrypoint"
 
 [build-system]
 requires = ["hatchling"]
